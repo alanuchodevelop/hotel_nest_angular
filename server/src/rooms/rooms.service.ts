@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Rooms } from '../entities/rooms.entity';
@@ -7,10 +7,26 @@ import { Rooms } from '../entities/rooms.entity';
 export class RoomsService {
   constructor(
     @InjectRepository(Rooms)
-    private roomRepository: Repository<Rooms>,
+    private readonly roomsRepository: Repository<Rooms>,
   ) {}
 
+  // Obtener todas las habitaciones
   findAll(): Promise<Rooms[]> {
-    return this.roomRepository.find();
+    return this.roomsRepository.find();
+  }
+
+  // Obtener una habitación por ID
+  async findOne(id: number): Promise<Rooms> {
+    const room = await this.roomsRepository.findOne({ where: { id } });
+    if (!room) {
+      throw new NotFoundException(`Room with ID ${id} not found`);
+    }
+    return room;
+  }
+
+  // Eliminar una habitación por ID
+  async remove(id: number): Promise<void> {
+    const room = await this.findOne(id);
+    await this.roomsRepository.remove(room);
   }
 }
