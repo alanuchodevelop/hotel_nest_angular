@@ -7,8 +7,8 @@ import { Rooms } from './entities/rooms.entity';
 import { SeederService } from './seeder/seeder.service';
 import { RoomsController } from './rooms/rooms.controller';
 import { RoomsService } from './rooms/rooms.service';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { UsersController } from './users/users.controller';
+import { UsersService } from './users/users.service';
 
 @Module({
   imports: [
@@ -30,16 +30,16 @@ import { AppService } from './app.service';
       }),
       inject: [ConfigService],
     }),
-    // Aquí se asegura que el repositorio de Room esté disponible
-    TypeOrmModule.forFeature([Rooms]),
+    TypeOrmModule.forFeature([Rooms, Users]), // Asegúrate de incluir las entidades Rooms y Users
   ],
-  controllers: [AppController, RoomsController],
-  providers: [AppService, RoomsService, SeederService],
+  controllers: [RoomsController, UsersController],
+  providers: [RoomsService, UsersService, SeederService], // Asegúrate de que SeederService esté registrado
 })
 export class AppModule implements OnModuleInit {
   constructor(private readonly seederService: SeederService) {}
 
   async onModuleInit() {
-    await this.seederService.seedRooms();
+    await this.seederService.seedRooms();  // Inserta habitaciones
+    await this.seederService.seedUsers();  // Inserta usuarios
   }
 }
