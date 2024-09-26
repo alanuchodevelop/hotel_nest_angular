@@ -1,0 +1,15 @@
+name: hotel-reservations
+
+services:
+  postgres:
+    type: postgres
+    portforward: 5432
+    creds:
+      user: lando
+      password: lando
+      database: hotel_db
+
+tooling:
+  postgres:
+    service: postgres
+    cmd: psql -U lando -d hotel_db -h postgres
