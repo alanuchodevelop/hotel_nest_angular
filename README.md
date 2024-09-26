@@ -70,3 +70,26 @@ Para ejecutar la aplicación en modo de desarrollo:
 
 ```bash
 npm run start
+
+### Notas:
+- El archivo `.env` debe ser ajustado según tu entorno de base de datos.
+
+- Estructura del proyecto (Backend)
+
+src/
+│
+├── app.module.ts           # Módulo principal
+├── main.ts                 # Punto de entrada de la aplicación
+├── entities/               # Entidades de TypeORM
+│   ├── users.entity.ts      # Entidad de Usuarios
+│   ├── rooms.entity.ts      # Entidad de Habitaciones
+├── users/                  # Módulo de usuarios
+│   ├── users.controller.ts  # Controlador de Usuarios
+│   ├── users.service.ts     # Servicio de Usuarios
+│   ├── dto/                # DTOs para validación de usuarios
+│   └── ...
+├── rooms/                  # Módulo de habitaciones
+│   ├── rooms.controller.ts  # Controlador de Habitaciones
+│   ├── rooms.service.ts     # Servicio de Habitaciones
+│   └── ...
+└── ...
