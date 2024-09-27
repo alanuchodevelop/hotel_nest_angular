@@ -24,4 +24,24 @@ export class UsersService {
     );
   }
 
+  // Actualizar un usuario
+  updateUser(id: number, user: Object): Observable<User> {
+    return this.http.put<User>(`${this.apiUrl}/${id}`, user).pipe(
+      catchError((error) => {
+        console.error('Error actualizando el usuario:', error);
+        return throwError(() => new Error('Error actualizando el usuario.'));
+      })
+    );
+  }
+
+  // Crear un nuevo usuario
+  createUser(user: User): Observable<User> {
+    return this.http.post<User>(this.apiUrl, user).pipe(
+      catchError((error) => {
+        console.error('Error creando el usuario:', error);
+        return throwError(() => new Error('Error creando el usuario.'));
+      })
+    );
+  }
+
 }
