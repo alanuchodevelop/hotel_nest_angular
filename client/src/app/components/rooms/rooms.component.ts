@@ -1,5 +1,5 @@
 import {Component, inject} from '@angular/core';
-import { RoomsService } from '../services/rooms.service';
+import { RoomsService } from '../../services/rooms.service';
 
 @Component({
   selector: 'app-rooms',
