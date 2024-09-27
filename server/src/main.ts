@@ -4,6 +4,12 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  // Habilitar CORS con opciones específicas
+  app.enableCors({
+    origin: 'http://localhost:4200',  // Solo permitir solicitudes desde este origen
+    methods: 'GET,POST,PUT,DELETE',  // Métodos HTTP permitidos
+    credentials: true,  // Si necesitas enviar cookies o autenticación
+  });
   // Configuración de Swagger
   const config = new DocumentBuilder()
     .setTitle('API de Reservas')

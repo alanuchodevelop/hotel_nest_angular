@@ -1,25 +1,26 @@
-import {Component, inject} from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { RoomsService } from '@app/services';
-import {CommonModule} from "@angular/common";
-
+import { CommonModule } from '@angular/common';
+import { HeaderComponent } from '@app/components/header/header.component';
+import { Room } from '@app/models';
 
 @Component({
   selector: 'app-rooms',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, HeaderComponent],
   templateUrl: './rooms.component.html',
-  styleUrl: './rooms.component.css'
+  styleUrls: ['./rooms.component.css']
 })
 export class RoomsComponent {
+  rooms: Room[] = [];
 
-  rooms: any[] = [];
-  // Inyectar el servicio directamente con el método inject
   private roomsService = inject(RoomsService);
-
+  private cdr = inject(ChangeDetectorRef);  // Inyecta ChangeDetectorRef
 
   ngOnInit(): void {
     this.roomsService.getRooms().subscribe((data) => {
       this.rooms = data;
+      this.cdr.markForCheck();  // Forzar la detección de cambios
     });
   }
 }
