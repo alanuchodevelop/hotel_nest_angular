@@ -1,10 +1,12 @@
 import {Component, inject} from '@angular/core';
-import { RoomsService } from '../../services/rooms.service';
+import { RoomsService } from '@app/services';
+import {CommonModule} from "@angular/common";
+
 
 @Component({
   selector: 'app-rooms',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './rooms.component.html',
   styleUrl: './rooms.component.css'
 })
