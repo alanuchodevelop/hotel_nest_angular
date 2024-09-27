@@ -9,6 +9,8 @@ import { RoomsController } from './rooms/rooms.controller';
 import { RoomsService } from './rooms/rooms.service';
 import { UsersController } from './users/users.controller';
 import { UsersService } from './users/users.service';
+import { ReservationsService } from './reservations/reservations.service';
+import { ReservationsController } from './reservations/reservations.controller';
 
 @Module({
   imports: [
@@ -30,10 +32,10 @@ import { UsersService } from './users/users.service';
       }),
       inject: [ConfigService],
     }),
-    TypeOrmModule.forFeature([Rooms, Users]), // Asegúrate de incluir las entidades Rooms y Users
+    TypeOrmModule.forFeature([Rooms, Users, Reservations]), // Asegúrate de incluir las entidades Rooms y Users
   ],
-  controllers: [RoomsController, UsersController],
-  providers: [RoomsService, UsersService, SeederService], // Asegúrate de que SeederService esté registrado
+  controllers: [RoomsController, UsersController, ReservationsController],
+  providers: [RoomsService, UsersService, SeederService, ReservationsService], // Asegúrate de que SeederService esté registrado
 })
 export class AppModule implements OnModuleInit {
   constructor(private readonly seederService: SeederService) {}

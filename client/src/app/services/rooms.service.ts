@@ -15,4 +15,24 @@ export class RoomsService {
   getRooms(): Observable<Room[]> {
     return this.http.get<Room[]>(this.apiUrl);
   }
+
+  // Método para eliminar una habitación por ID
+  deleteRoom(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
+  // ckeck enable or not
+  getRoomById(id: number): Observable<Room> {
+    return this.http.get<Room>(`${this.apiUrl}/${id}`);
+  }
+
+  // Crear una nueva habitación
+  createRoom(room: Room): Observable<Room> {
+    return this.http.post<Room>(this.apiUrl, room);
+  }
+
+  // Actualizar una habitación existente
+  updateRoom(id: number, room: Room): Observable<Room> {
+    return this.http.put<Room>(`${this.apiUrl}/${id}`, room);
+  }
 }
