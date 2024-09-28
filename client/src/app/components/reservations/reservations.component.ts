@@ -7,11 +7,12 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { User } from "@app/models/users.model";
 import {Reservation, Room} from "@app/models";
 import { RoomsService, UsersService } from "@app/services";
+import {HeaderComponent} from "@app/components/header/header.component";
 
 @Component({
   selector: 'app-reservations',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, HeaderComponent],
   templateUrl: './reservations.component.html',
   styleUrls: ['./reservations.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
