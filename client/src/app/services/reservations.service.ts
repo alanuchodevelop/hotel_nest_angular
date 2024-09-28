@@ -20,4 +20,13 @@
     getReservations(): Observable<Reservation[]> {
       return this.http.get<Reservation[]>(this.apiUrl);
     }
+
+
+    updateReservation(id: number, reservationData: any): Observable<any> {
+      return this.http.patch(`${this.apiUrl}/${id}`, reservationData);
+    }
+
+    deleteReservation(id: number): Observable<any> {
+      return this.http.delete(`${this.apiUrl}/${id}`);
+    }
   }

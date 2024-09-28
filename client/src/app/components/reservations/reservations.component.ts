@@ -1,12 +1,12 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
-import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { ToastrService } from 'ngx-toastr';
-import { ReservationsService } from '@app/services/reservations.service';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { User } from "@app/models/users.model";
+import {FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors} from '@angular/forms';
+import {CommonModule} from '@angular/common';
+import {ToastrService} from 'ngx-toastr';
+import {ReservationsService} from '@app/services/reservations.service';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {User} from "@app/models/users.model";
 import {Reservation, Room} from "@app/models";
-import { RoomsService, UsersService } from "@app/services";
+import {RoomsService, UsersService} from "@app/services";
 import {HeaderComponent} from "@app/components/header/header.component";
 
 @Component({
@@ -25,6 +25,8 @@ export class ReservationsComponent implements OnInit {
   todayString: string = '';  // Nueva variable para el valor mínimo de la fecha
   endDateMin: string = '';  // Para definir el mínimo de endDate
   reservations: Reservation[] = [];
+  showModalDelete = false;
+  idForDeleteSelected: number = 0;
 
   constructor(
     private fb: FormBuilder,
@@ -38,7 +40,10 @@ export class ReservationsComponent implements OnInit {
       userId: ['', Validators.required],  // Campo para el usuario
       roomId: ['', Validators.required],
       startDate: ['', [Validators.required, this.futureDateValidator.bind(this)]],
-      endDate: [{ value: '', disabled: true }, [Validators.required, this.maxStayValidator.bind(this), this.bookingWindowValidator.bind(this)]]
+      endDate: [{
+        value: '',
+        disabled: true
+      }, [Validators.required, this.maxStayValidator.bind(this), this.bookingWindowValidator.bind(this)]]
     });
   }
 
@@ -65,6 +70,7 @@ export class ReservationsComponent implements OnInit {
     this.reservationsService.getReservations().subscribe({
       next: (data) => {
         this.reservations = data;
+        this.cdr.markForCheck()
       },
       error: (error) => {
         this.toastr.error('Error al cargar las reservaciones');
@@ -87,7 +93,7 @@ export class ReservationsComponent implements OnInit {
     const startDate = startDateValue ? new Date(startDateValue) : new Date();
     const today = new Date();
     today.setHours(0, 0, 0, 0);  // Establecer las horas a medianoche
-    return startDate > today ? null : { futureDate: true };
+    return startDate > today ? null : {futureDate: true};
   }
 
   // Validador para asegurar que la estadía no supere los 3 días
@@ -96,7 +102,7 @@ export class ReservationsComponent implements OnInit {
     const startDate = startDateValue ? new Date(startDateValue) : new Date();
     const endDate = new Date(control.value);
     const diffDays = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
-    return diffDays <= 3 ? null : { maxStay: true };
+    return diffDays <= 3 ? null : {maxStay: true};
   }
 
   // Validador para asegurar que la reserva no sea con más de 30 días de anticipación
@@ -104,7 +110,7 @@ export class ReservationsComponent implements OnInit {
     const endDate = new Date(control.value);
     const today = new Date();
     const diffDays = Math.ceil((endDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
-    return diffDays <= 30 ? null : { bookingWindow: true };
+    return diffDays <= 30 ? null : {bookingWindow: true};
   }
 
   // Método para crear una reserva
@@ -154,4 +160,31 @@ export class ReservationsComponent implements OnInit {
       },
     });
   }
+
+  deleteReservation() {
+    this.reservationsService.deleteReservation(this.idForDeleteSelected).subscribe({
+      next: () => {
+        this.toastr.success('Reserva eliminada con éxito');
+        this.loadReservations();
+        this.closeModalDelete();
+      },
+      error: (error) => {
+        this.toastr.error('Error al eliminar la reserva');
+        console.error(error);
+        this.closeModalDelete();
+      }
+    });
+
+  }
+
+  openModalDelete(id: number) {
+    this.showModalDelete = true;
+    this.idForDeleteSelected = id;
+  }
+
+  closeModalDelete() {
+    this.showModalDelete = false;
+    this.idForDeleteSelected = 0;
+  }
+
 }
