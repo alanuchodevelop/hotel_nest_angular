@@ -7,7 +7,7 @@
     <div class="mb-4">
       <label for="userId" class="block text-gray-700 text-sm font-bold mb-2">Usuario</label>
       <select id="userId" formControlName="userId"
-              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+              class="shadow  border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
         <option value="" disabled selected>Selecciona un usuario</option>
         <option *ngFor="let user of users" [value]="user.id">{{ user.name }}</option>
       </select>
@@ -20,7 +20,7 @@
     <div class="mb-4">
       <label for="roomId" class="block text-gray-700 text-sm font-bold mb-2">Habitación</label>
       <select id="roomId" formControlName="roomId"
-              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+              class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
         <option value="" disabled selected>Selecciona una habitación</option>
         <option *ngFor="let room of rooms" [value]="room.id">{{ room.room_number }} - {{ room.description }}</option>
       </select>
