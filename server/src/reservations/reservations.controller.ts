@@ -12,12 +12,7 @@ export class ReservationsController {
 
   @Post()
   create(@Body() createReservationDto: CreateReservationDto) {
-    // Imprimir el contenido del DTO para verificar que las fechas lleguen correctamente
-  console.log('Received DTO:', createReservationDto);
 
-  // Aquí puedes verificar si las fechas se están recibiendo correctamente
-  console.log('Start Date:', createReservationDto.startDate);
-  console.log('End Date:', createReservationDto.endDate);
   // Conversión explícita de las fechas de cadena a Date
   const reservations = new Reservations();
   reservations.start_date = new Date(createReservationDto.startDate);  // Convertir a Date
