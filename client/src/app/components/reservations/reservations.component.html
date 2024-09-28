@@ -1,0 +1,82 @@
+<div class="container mx-auto mt-8">
+  <h1 class="text-2xl font-bold mb-4">Realizar Reserva</h1>
+
+  <form [formGroup]="reservationForm" (ngSubmit)="makeReservation()">
+    <!-- Selector de usuario -->
+    <div class="mb-4">
+      <label for="userId" class="block text-gray-700 text-sm font-bold mb-2">Usuario</label>
+      <select id="userId" formControlName="userId"
+              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+        <option value="" disabled selected>Selecciona un usuario</option>
+        <option *ngFor="let user of users" [value]="user.id">{{ user.name }}</option>
+      </select>
+      <div *ngIf="reservationForm.get('userId')?.errors?.['required']" class="text-red-500 text-xs italic">
+        Debes seleccionar un usuario.
+      </div>
+    </div>
+
+    <!-- Selector de habitación -->
+    <div class="mb-4">
+      <label for="roomId" class="block text-gray-700 text-sm font-bold mb-2">Habitación</label>
+      <select id="roomId" formControlName="roomId"
+              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+        <option value="" disabled selected>Selecciona una habitación</option>
+        <option *ngFor="let room of rooms" [value]="room.id">{{ room.room_number }} - {{ room.description }}</option>
+      </select>
+      <div *ngIf="reservationForm.get('roomId')?.errors?.['required']" class="text-red-500 text-xs italic">
+        Debes seleccionar una habitación.
+      </div>
+    </div>
+
+    <!-- Fechas -->
+    <div class="mb-4">
+      <label for="startDate" class="block text-gray-700 text-sm font-bold mb-2">Fecha de inicio</label>
+      <input type="date" id="startDate" formControlName="startDate"
+             [min]="todayString"
+             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+      <div *ngIf="reservationForm.get('startDate')?.errors?.['required']" class="text-red-500 text-xs italic">
+        La reserva debe comenzar al menos el día siguiente.
+      </div>
+      <div *ngIf="reservationForm.get('startDate')?.errors?.['futureDate']" class="text-red-500 text-xs italic">
+        La fecha de inicio no puede ser hoy.
+      </div>
+    </div>
+
+
+    <div class="mb-4">
+      <label for="endDate" class="block text-gray-700 text-sm font-bold mb-2">Fecha de fin</label>
+      <input type="date" id="endDate" formControlName="endDate"
+             [min]="endDateMin"
+             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+      <div *ngIf="reservationForm.get('endDate')?.errors?.['required']" class="text-red-500 text-xs italic">
+        Debes seleccionar una fecha de fin.
+      </div>
+      <div *ngIf="reservationForm.get('endDate')?.errors?.['maxStay']" class="text-red-500 text-xs italic">
+        La estadía no puede ser superior a 3 días.
+      </div>
+      <div *ngIf="reservationForm.get('endDate')?.errors?.['bookingWindow']" class="text-red-500 text-xs italic">
+        No se puede reservar con más de 30 días de anticipación.
+      </div>
+    </div>
+
+    <button type="submit" [disabled]="reservationForm.invalid"
+            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+      Reservar
+    </button>
+  </form>
+</div>
+
+
+<div class="container mx-auto mt-8">
+  <h1 class="text-2xl font-bold mb-4">Reservaciones</h1>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div *ngFor="let reservation of reservations" class="bg-white shadow-md rounded-lg p-4">
+      <h2 class="text-xl font-bold mb-2">Reservación {{ reservation.id }}</h2>
+      <p><strong>Usuario:</strong> {{ reservation.id}}</p>
+      <p><strong>Fecha de inicio:</strong> {{ reservation.start_date | date: 'shortDate' }}</p>
+      <p><strong>Fecha de fin:</strong> {{ reservation.end_date | date: 'shortDate' }}</p>
+      <p><strong>Estado:</strong> {{ reservation.status }}</p>
+    </div>
+  </div>
+</div>

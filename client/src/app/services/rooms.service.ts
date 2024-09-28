@@ -35,4 +35,9 @@ export class RoomsService {
   updateRoom(id: number, room: Room): Observable<Room> {
     return this.http.put<Room>(`${this.apiUrl}/${id}`, room);
   }
+
+  // available rooms
+  getAvailableRooms(): Observable<Room[]> {
+    return this.http.get<Room[]>(`${this.apiUrl}?available=true`);  // Filtra habitaciones disponibles
+  }
 }

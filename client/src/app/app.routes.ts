@@ -24,4 +24,10 @@ export const routes: Routes = [
       (m) => m.InicioComponent,
     ),
   },
+  {
+    path: 'reservaciones',
+    loadComponent: () => import('./components/reservations/reservations.component').then(
+      (m) => m.ReservationsComponent,
+    ),
+  },
 ];

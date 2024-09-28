@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, MoreThanOrEqual, LessThanOrEqual } from 'typeorm';  // Importa los operadores
 import { Reservations } from '../entities/reservations.entity';
 import { CreateReservationDto } from './create-reservation.dto';
 
@@ -10,11 +10,6 @@ export class ReservationsService {
     @InjectRepository(Reservations)
     private reservationsRepository: Repository<Reservations>,
   ) {}
-
-  async create(createReservationDto: CreateReservationDto): Promise<Reservations> {
-    const reservation = this.reservationsRepository.create(createReservationDto);
-    return this.reservationsRepository.save(reservation);
-  }
 
   async findAll(): Promise<Reservations[]> {
     return this.reservationsRepository.find();
@@ -41,5 +36,33 @@ export class ReservationsService {
   async remove(id: number): Promise<void> {
     const reservation = await this.findOne(id);
     this.reservationsRepository.remove(reservation);
+  }
+
+
+  // Verificar disponibilidad
+  async checkAvailability(startDate: Date, endDate: Date): Promise<boolean> {
+    const existingReservations = await this.reservationsRepository.find({
+      where: [
+        {
+          start_date: LessThanOrEqual(endDate),
+          end_date: MoreThanOrEqual(startDate),
+        },
+      ],
+    });
+
+    return existingReservations.length === 0;
+  }
+
+  // Crear nueva reserva
+  async create(createReservationDto: CreateReservationDto): Promise<Reservations> {
+    console.log('Service - Start Date:', createReservationDto.startDate);
+    console.log('Service - End Date:', createReservationDto.endDate);
+
+    const reservation = new Reservations();
+    reservation.start_date = new Date(createReservationDto.startDate);  // Convertir a Date
+    reservation.end_date = new Date(createReservationDto.endDate);
+    reservation.status = createReservationDto.status;
+
+    return await this.reservationsRepository.save(reservation);
   }
 }
