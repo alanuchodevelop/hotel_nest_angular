@@ -22,11 +22,13 @@ export class ReservationsComponent implements OnInit {
   today: Date = new Date();
   users: User[] = [];
   rooms: Room[] = [];
-  todayString: string = '';  // Nueva variable para el valor mínimo de la fecha
-  endDateMin: string = '';  // Para definir el mínimo de endDate
+  todayString: string = '';
+  endDateMin: string = '';
   reservations: Reservation[] = [];
   showModalDelete = false;
   idForDeleteSelected: number = 0;
+  isEditMode: boolean = false;  // Para alternar entre crear y editar
+  reservationToEdit: Reservation | null = null;  // Para almacenar la reservación a editar
 
   constructor(
     private fb: FormBuilder,
@@ -187,4 +189,68 @@ export class ReservationsComponent implements OnInit {
     this.idForDeleteSelected = 0;
   }
 
+  // Cargar una reservación para editar
+  openEditReservation(reservation: Reservation) {
+    console.log(reservation)
+    this.isEditMode = true;  // Cambiar a modo edición
+    this.reservationToEdit = reservation;  // Guardar la reservación que se va a editar
+    this.reservationForm.patchValue({  // Llenar el formulario con los valores de la reservación a editar
+      userId: reservation.userId,
+      roomId: reservation.roomId,
+      startDate: reservation.start_date,
+      endDate: reservation.end_date
+    });
+  }
+
+  // Método para guardar o actualizar una reservación
+  saveReservation() {
+    if (this.reservationForm.valid) {
+      const reservationData = {
+        userId: Number(this.reservationForm.value.userId),
+        roomId: this.reservationForm.value.roomId,
+        startDate: this.reservationForm.value.startDate,
+        endDate: this.reservationForm.value.endDate
+      };
+
+      console.log(18)
+      debugger
+      if (this.isEditMode && this.reservationToEdit) {
+        // Si estamos en modo edición, actualizar la reservación existente
+        this.reservationsService.updateReservation(this.reservationToEdit.id, reservationData).subscribe({
+          next: () => {
+            this.toastr.success('Reservación actualizada con éxito');
+            this.loadReservations();
+            this.resetForm();
+          },
+          error: (error) => {
+            this.toastr.error('Error al actualizar la reservación');
+            console.error(error);
+          }
+        });
+      } else {
+        debugger
+        // Si no estamos en modo edición, crear una nueva reservación
+        this.reservationsService.createReservation(reservationData).subscribe({
+          next: () => {
+            this.toastr.success('Reservación creada con éxito');
+            this.loadReservations();
+            this.resetForm();
+          },
+          error: (error) => {
+            this.toastr.error('Error al crear la reservación');
+            console.error(error);
+          }
+        });
+      }
+    } else {
+      this.toastr.error('Formulario inválido');
+    }
+  }
+
+  resetForm() {
+    this.reservationForm.reset();
+    this.isEditMode = false;
+    this.reservationToEdit = null;
+  }
 }
+
