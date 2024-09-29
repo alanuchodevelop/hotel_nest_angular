@@ -61,7 +61,8 @@ Sigue los pasos a continuación para configurar el entorno de desarrollo.
     ```bash
     npm run typeorm migration:run
     ```
-
+## Diagrama de base de datos
+![base de datos](/hotel_db.png)
 ## Uso
 
 ### Ejecutar la aplicación
@@ -93,3 +94,5 @@ src/
 │   ├── rooms.service.ts     # Servicio de Habitaciones
 │   └── ...
 └── ...
+
+

@@ -7,7 +7,7 @@ async function bootstrap() {
   // Habilitar CORS con opciones específicas
   app.enableCors({
     origin: 'http://localhost:4200',  // Solo permitir solicitudes desde este origen
-    methods: 'GET,POST,PUT,DELETE',  // Métodos HTTP permitidos
+    methods: 'GET,POST,PUT,DELETE,PATCH',  // Métodos HTTP permitidos
     credentials: true,  // Si necesitas enviar cookies o autenticación
   });
   // Configuración de Swagger
